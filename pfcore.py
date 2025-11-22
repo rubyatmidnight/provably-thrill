@@ -27,7 +27,8 @@ def nextPositiveInt32(randomBytes: bytes, maxExclusive: Optional[int]=None) -> i
     limit = (2**32) - (2**32 % maxExclusive)
     # Try every 4-byte block in the randomBytes sequence
     for i in range(0, len(randomBytes)-3, 4):
-        val = int.from_bytes(randomBytes[i:i+4], 'big')
+        # JS uses little-endian for u32 extraction
+        val = int.from_bytes(randomBytes[i:i+4], 'little')
         if val < limit:
             return val % maxExclusive
     # If all blocks fail, re-run with new cursor
